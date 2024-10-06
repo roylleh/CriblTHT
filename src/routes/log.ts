@@ -29,9 +29,11 @@ export default async function (fastify: FastifyInstance) {
     });
 
     const data = [];
+    const re = new RegExp(filter);
+
     for await (const line of rl) {
       // If no user provided filter OR filter matches.
-      if (new RegExp(filter).test(line)) {
+      if (re.test(line)) {
         data.push(line);
 
         // Return when length equals user provided lines, otherwise keep trying.
