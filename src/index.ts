@@ -3,7 +3,7 @@ import { TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
 import fastify from "fastify";
 import path from "path";
 
-const app = fastify({}).withTypeProvider<TypeBoxTypeProvider>();
+const app = fastify({ logger: true }).withTypeProvider<TypeBoxTypeProvider>();
 
 const start = async () => {
   try {
