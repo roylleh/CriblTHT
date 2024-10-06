@@ -20,19 +20,26 @@ export default async function (fastify: FastifyInstance) {
   }>("/log", { schema: { querystring: T } }, async (req) => {
     let { file, lines, filter } = req.query;
 
+    // If no user provided file, simply fetch the newest.
     file ??= await getNewestFile();
+
+    // If no user provided lines, simply use the default.
     lines ??= LINES_DEFAULT;
 
+    // Make scalable async calls.
     const rl = readline.createInterface({
       input: fs.createReadStream(FILE_MOUNT + file),
     });
 
     const data = [];
     for await (const line of rl) {
+      // If no user provided filter OR filter matches.
       if (!filter || new RegExp(filter).test(line)) {
         data.push(line);
+
+        // Return when length equals user provided lines, otherwise keep trying.
         if (data.length === lines) {
-          break;
+          return data;
         }
       }
     }
